@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --primary: #ff8a3d; /* orange */
+  --primary-600: #ff7a1a;
+  --primary-700: #ff7a1a;
+  --accent: #f2f2f2;
+  --muted: #faf5ef;
+  --border: #f2f2f2;
+  --ring: color-mix(in oklab, var(--primary) 50%, white);
+  --radius: 14px;
+  --shadow-soft: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Dark mode disabled - always use light theme */
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --primary: #ff8a3d;
+    --primary-600: #ff7a1a;
+    --primary-700: #e56f10;
+    --accent: #4a2d17;
+    --muted: #1a120b;
+    --border: #3a2414;
+    --ring: color-mix(in oklab, var(--primary) 50%, black);
+  }
+} */
+
+body {
+  background: radial-gradient(1200px 600px at 80% -100px, var(--accent), transparent 70%),
+    radial-gradient(800px 400px at -10% 10%, var(--muted), transparent 60%),
+    var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Orange themed controls */
+.btn-primary {
+  background: linear-gradient(180deg, color-mix(in oklab, var(--primary) 92%, white) 0%, var(--primary-600) 100%);
+  color: white;
+  border: 1px solid color-mix(in oklab, var(--primary-600) 70%, black 20%);
+  border-radius: calc(var(--radius) - 6px);
+  box-shadow: 0 6px 16px color-mix(in oklab, var(--primary) 24%, transparent);
+  transition: transform .12s ease, box-shadow .2s ease, filter .2s ease, background .2s ease;
+}
+.btn-primary:hover {
+  filter: brightness(0.98);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px color-mix(in oklab, var(--primary) 32%, transparent);
+}
+.focus-orange:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+  border-color: var(--primary-600);
+}
+
+.card {
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--accent) 10%, var(--background));
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Secondary button */
+.btn-secondary {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: calc(var(--radius) - 8px);
+  transition: background .2s ease, border-color .2s ease, transform .12s ease;
+}
+.btn-secondary:hover {
+  background: color-mix(in oklab, var(--accent) 16%, transparent);
+  transform: translateY(-1px);
+}
+
+/* Horizontal scrollbar styling for timeline */
+.x-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #5a5d72 rgba(0,0,0,0.08);
+}
+.x-scrollbar::-webkit-scrollbar {
+  height: 12px; /* thickness */
+}
+.x-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.06);
+  border-radius: 999px;
+}
+.x-scrollbar::-webkit-scrollbar-thumb {
+  background: #5a5d72; /* dark gray-blue */
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.6);
+}
+.x-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #4a4d62;
+}
+
+/* Utility: glass panel */
+.glass {
+  background: color-mix(in oklab, var(--accent) 10%, var(--background));
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+}
+
+/* Links */
+a.link {
+  color: var(--primary);
+  text-underline-offset: 3px;
+}
+a.link:hover {
+  color: var(--primary-700);
+}
+
+/* Animations cho trang đăng nhập */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Selective smooth transitions - avoid affecting layout */
+button, a, .card, [class*="btn-"], input, select, textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Sidebar margin auto-adjustment */
+@media (min-width: 768px) {
+  main {
+    margin-left: 256px; /* Default sidebar width */
+    transition: margin-left 0.3s ease;
+  }
+}
+
+@media (max-width: 767px) {
+  main {
+    margin-left: 0; /* No margin on mobile */
+  }
+}

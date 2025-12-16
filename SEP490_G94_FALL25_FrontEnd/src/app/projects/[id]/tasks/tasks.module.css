@@ -1,0 +1,51 @@
+/* Task table grid layout - prevent column overlap */
+.taskTableHeader,
+.taskTableRow {
+  display: grid !important;
+  transition: background-color 0.15s ease !important;
+}
+
+.taskTableHeader {
+  grid-template-columns: 40px minmax(200px, 1fr) 120px 110px;
+  column-gap: 16px;
+}
+
+.taskTableRow {
+  grid-template-columns: 40px minmax(200px, 1fr) 120px 110px;
+  column-gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .taskTableHeader {
+    grid-template-columns: 40px minmax(250px, 2fr) 140px 140px 120px 100px 100px 80px 60px;
+  }
+  
+  .taskTableRow {
+    grid-template-columns: 40px minmax(250px, 2fr) 140px 140px 120px 100px 100px 80px 60px;
+  }
+}
+
+/* Ensure grid items don't overflow */
+.taskTableRow > * {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Task name cell - allow wrapping but controlled */
+.taskNameCell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* Prevent MUI Box transitions from affecting grid */
+.taskTableContainer .MuiBox-root {
+  transition: none !important;
+}
+
+/* Fix for subtask indentation */
+.subtaskRow {
+  padding-left: 56px !important;
+}
+

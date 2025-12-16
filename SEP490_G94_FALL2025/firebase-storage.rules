@@ -1,0 +1,150 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Public read for template files used to bootstrap new projects
+    match /templates/{path=**} {
+      allow read: if true;
+      allow write: if false; // lock templates from client-side writes
+    }
+
+    // Documents folder - chỉ authenticated users mới có thể upload
+    match /documents/{projectId}/{fileName} {
+      // Cho phép đọc public (để download)
+      allow read: if true;
+      
+      // Chỉ user đã đăng nhập mới có thể upload/update/delete
+      allow write: if request.auth != null;
+      
+      // Giới hạn file size tối đa 10MB
+      allow write: if request.resource.size < 10 * 1024 * 1024;
+      
+      // Chỉ cho phép các file types nhất định
+      allow write: if request.resource.contentType.matches('application/pdf') ||
+                      request.resource.contentType.matches('application/msword') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+                      request.resource.contentType.matches('application/vnd.ms-excel') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') ||
+                      request.resource.contentType.matches('text/plain') ||
+                      request.resource.contentType.matches('image/jpeg') ||
+                      request.resource.contentType.matches('image/png');
+    }
+    
+    // Milestone files folder
+    match /milestones/{projectId}/{milestoneId}/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.resource.size < 10 * 1024 * 1024;
+    }
+    
+    // Task attachments folder
+    // Cho phép server-side upload (không có auth) hoặc client-side upload (có auth)
+    match /task_attachments/{projectId}/{taskId}/{fileName} {
+      allow read: if true;
+      // Server-side upload (không có auth) - chỉ cần kiểm tra size và type
+      allow write: if request.auth == null
+                    && request.resource.size < 20 * 1024 * 1024
+                    && (
+                      request.resource.contentType.matches('image/.*') ||
+                      request.resource.contentType.matches('application/pdf') ||
+                      request.resource.contentType.matches('application/msword') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+                      request.resource.contentType.matches('application/vnd.ms-excel') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') ||
+                      request.resource.contentType.matches('application/vnd.ms-powerpoint') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+                    );
+      // Client-side upload (có auth) - kiểm tra auth, size và type
+      allow write: if request.auth != null 
+                    && request.resource.size < 20 * 1024 * 1024
+                    && (
+                      request.resource.contentType.matches('image/.*') ||
+                      request.resource.contentType.matches('application/pdf') ||
+                      request.resource.contentType.matches('application/msword') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+                      request.resource.contentType.matches('application/vnd.ms-excel') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') ||
+                      request.resource.contentType.matches('application/vnd.ms-powerpoint') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+                    );
+    }
+    
+    // Feature attachments folder
+    // Cho phép server-side upload (không có auth) hoặc client-side upload (có auth)
+    match /feature_attachments/{projectId}/{featureId}/{fileName} {
+      allow read: if true;
+      // Server-side upload (không có auth) - chỉ cần kiểm tra size và type
+      allow write: if request.auth == null
+                    && request.resource.size < 20 * 1024 * 1024
+                    && (
+                      request.resource.contentType.matches('image/.*') ||
+                      request.resource.contentType.matches('application/pdf') ||
+                      request.resource.contentType.matches('application/msword') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+                      request.resource.contentType.matches('application/vnd.ms-excel') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') ||
+                      request.resource.contentType.matches('application/vnd.ms-powerpoint') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+                    );
+      // Client-side upload (có auth) - kiểm tra auth, size và type
+      allow write: if request.auth != null 
+                    && request.resource.size < 20 * 1024 * 1024
+                    && (
+                      request.resource.contentType.matches('image/.*') ||
+                      request.resource.contentType.matches('application/pdf') ||
+                      request.resource.contentType.matches('application/msword') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+                      request.resource.contentType.matches('application/vnd.ms-excel') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') ||
+                      request.resource.contentType.matches('application/vnd.ms-powerpoint') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+                    );
+    }
+    
+    // Function attachments folder
+    // Cho phép server-side upload (không có auth) hoặc client-side upload (có auth)
+    match /function_attachments/{projectId}/{functionId}/{fileName} {
+      allow read: if true;
+      // Server-side upload (không có auth) - chỉ cần kiểm tra size và type
+      allow write: if request.auth == null
+                    && request.resource.size < 20 * 1024 * 1024
+                    && (
+                      request.resource.contentType.matches('image/.*') ||
+                      request.resource.contentType.matches('application/pdf') ||
+                      request.resource.contentType.matches('application/msword') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+                      request.resource.contentType.matches('application/vnd.ms-excel') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') ||
+                      request.resource.contentType.matches('application/vnd.ms-powerpoint') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+                    );
+      // Client-side upload (có auth) - kiểm tra auth, size và type
+      allow write: if request.auth != null 
+                    && request.resource.size < 20 * 1024 * 1024
+                    && (
+                      request.resource.contentType.matches('image/.*') ||
+                      request.resource.contentType.matches('application/pdf') ||
+                      request.resource.contentType.matches('application/msword') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document') ||
+                      request.resource.contentType.matches('application/vnd.ms-excel') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') ||
+                      request.resource.contentType.matches('application/vnd.ms-powerpoint') ||
+                      request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+                    );
+    }
+    
+    // Project assets folder
+    match /projects/{projectId}/assets/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.resource.size < 5 * 1024 * 1024;
+    }
+    
+    // User avatars folder
+    match /users/{userId}/avatar/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                      (request.auth.uid == userId || request.auth.token.admin == true) &&
+                      request.resource.size < 2 * 1024 * 1024 &&
+                      request.resource.contentType.matches('image/.*');
+    }
+  }
+}
